@@ -1,0 +1,22 @@
+#!/usr/bin/perl -w
+
+$0=~/.*\/(.*)/;
+
+my $DICT_DIR = "~/Documents/Dictionaries/wdict/";
+
+my $DICTFILE = "$DICT_DIR/Websters_Unabbridged_Dictionary.txt";
+my $LKTABLE  = "$DICT_DIR/WUD_Lookup.txt";
+
+die "Usage: $1 <word>\n" if @ARGV!=1;
+
+my $word = uc($ARGV[0]);
+
+my @results = `grep -w \"$word\" $LKTABLE|awk '{print \$2,\$3}'`;
+
+for (@results) {
+	print "\n";
+	my ($start,$end) = split(" ",$_);
+	my $tail = $end - $start +1;
+	system("head -n $end $DICTFILE|tail -n $tail");
+}
+
